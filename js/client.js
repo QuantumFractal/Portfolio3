@@ -6,8 +6,12 @@ var mouseY = 0;
 
 context.strokeStyle = "#000000";
 canvas.width = canvas.width; 
- context.fillStyle = "#ffffff";
- context.fillRect(0,0,canvas.width,canvas.height);
+context.fillStyle = "#ffffff";
+context.fillRect(0,0,canvas.width,canvas.height);
+
+var socket = io();
+
+
 
 // when the user presses their mouse down on the canvas.
 canvas.addEventListener("mousedown",function (evt) {

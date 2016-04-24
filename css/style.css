@@ -11,6 +11,9 @@ h2 {
     text-align: center;
 }
 
+hr {
+    width: 95%;
+}
 
 body {
     background-color : #c6e2ff;
@@ -26,7 +29,7 @@ button {
 }
 
 canvas {
-    border:3px solid black;
+    border:3px solid #8a9eb2;
     padding-left: 0;
     padding-right: 0;
     margin-left: auto;
