@@ -10,6 +10,7 @@ clearBoard();
 var socket = io();
 currentStroke = {};
 
+board_history = [];
 
 /*
  * Generator functions
@@ -19,15 +20,23 @@ function Point(x, y, type) {
 }
 
 function Stroke(color) {
-    return {'color':color, 'points':[]}
+    return {'color':color, 'visibility': true, 'points':[]};
 }
 
 /*
  * Socket Listeners
  */
-socket.on('stroke', function(stroke){
-    console.log("Someone Stroked a color: "+stroke.color)
+socket.on('stroke', function(stroke) {
+    console.log("Someone Stroked a color: "+stroke.color);
     drawStroke(stroke);
+    board_history.push(stroke);
+});
+
+undocount = 0;
+socket.on('undo', function() {
+    undocount++;
+    console.log('# of undos: '+undocount);
+    undoLast();
 });
 
 socket.on('clear', clearBoard);
@@ -35,12 +44,36 @@ socket.on('clear', clearBoard);
 /*
  * Canvas functions
  */
+function redraw(){
+    clearBoard();
+    
+    for(i=0; i<board_history.length; i++){
+        stroke = board_history[i];
+        context.strokeStyle = stroke.color.toString();
+        for (j=0; j<stroke.points.length; j++){
+            drawPoint(stroke.points[j]);
+        } 
+        context.strokeStyle = currentSwatch.style.backgroundColor;
+    }
+}
+
+function undoLast() {
+    if(board_history.length > 0) {
+        board_history.pop();
+        redraw();
+        return true;
+    }
+    return false;
+}
+
 function clearBoard() {
     canvas.width = canvas.width; 
     context.fillStyle = "#ffffff";
     context.fillRect(0,0,canvas.width,canvas.height);
+    if (currentSwatch != undefined) {
+    context.strokeStyle = currentSwatch.style.backgroundColor;
+    }
 }
-
 function drawStroke(stroke) {
     
     // Terrible solution
@@ -86,6 +119,9 @@ function handleEvent(event) {
         // Send stroke
         socket.emit('stroke', currentStroke);
         
+        // Save history
+        board_history.push(currentStroke);
+        
     } else if (event.type === "mousemove"){
         if (isMouseDown) {
             mouseX = event.offsetX;
@@ -111,8 +147,16 @@ var clearBtn = document.getElementById("clearButton");
 clearBtn.addEventListener("click", function(evt){
     socket.emit('clear', '');
     clearBoard();
+    board_history = [];
 });
 
+var undoBtn = document.getElementById("undoButton");
+undoBtn.addEventListener("click", function(evt){
+    last = undoLast();
+    if (last == true) {
+        socket.emit('undo');
+    }
+});
 
 /*
  * Palette functons
