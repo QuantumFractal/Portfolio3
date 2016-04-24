@@ -42,3 +42,25 @@ div {
     border: 2px solid #8a9eb2;
     background-color : #eeeeee;    
 }
+
+ul {
+    z-index: 5;
+    list-style-type:none;
+    margin:0;
+    padding:0;
+    border:0;
+    height:30px;
+}
+li {
+    margin:0;
+    padding:0;
+    border:2px solid white;
+    display:block;
+    float:left;
+    width:30px;
+    height:30px;
+    cursor:pointer;
+}
+li.active {
+    border:2px solid #666;
+}

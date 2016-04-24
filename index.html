@@ -9,12 +9,21 @@
 
 <body>
     <div id="center">
-    <h2>Drawing</h2>
-    <hr>
-    <button id="clearButton"> Clear </button>
-    <hr>
-    <canvas id="drawingPad" width="600px" height="400px"></canvas>
-    <br>
+        <h2>Drawing</h2>
+        <hr>
+        <button id="clearButton"> Clear </button>
+        <ul id="palette">
+            <li class="active" style="background:#000000"></li>
+            <li style="background:#ff0000"></li>
+            <li style="background:#00ff00"></li>
+            <li style="background:#0000ff"></li>
+            <li style="background:#ffff00"></li>
+            <li style="background:#ff00ff"></li>
+            <li style="background:#00ffff"></li>
+        </ul>
+        <hr>
+        <canvas id="drawingPad" width="600px" height="400px"></canvas>
+        <br>
     </div>
     
     <!-- Load scripts after page loads -->

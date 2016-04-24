@@ -14,15 +14,19 @@ currentStroke = {};
 /*
  * Generator functions
  */
-function Point(x, y, type){
+function Point(x, y, type) {
     return {'x':x,'y':y, 'type':type};
+}
+
+function Stroke(color) {
+    return {'color':color, 'points':[]}
 }
 
 /*
  * Socket Listeners
  */
 socket.on('stroke', function(stroke){
-    console.log("having a stroke");
+    console.log("Someone Stroked a color: "+stroke.color)
     drawStroke(stroke);
 });
 
@@ -42,9 +46,11 @@ function drawStroke(stroke) {
     // Terrible solution
     while(isMouseDown);
 
+    context.strokeStyle = stroke.color.toString();
     for (i=0; i<stroke.points.length; i++){
         drawPoint(stroke.points[i]);
     } 
+    context.strokeStyle = currentSwatch.style.backgroundColor;
 }
 
 function drawPoint(point) {
@@ -60,7 +66,7 @@ function drawPoint(point) {
 }
 
 function handleEvent(event) {
-    if(event.type === "mousedown" || event.type === "touchstart"){
+    if(event.type === "mousedown"){
         isMouseDown = true;
         mouseX = event.offsetX;
         mouseY = event.offsetY;
@@ -68,19 +74,19 @@ function handleEvent(event) {
         context.moveTo(mouseX, mouseY);
         
         // Save starting point
-        currentStroke = {'points':[Point(mouseX, mouseY, 'start')]};   
+        currentStroke = Stroke(currentSwatch.style.backgroundColor);
+        currentStroke.points.push(Point(mouseX, mouseY, 'start'));  
         
-    } else if (event.type === "mouseup" || event.type === "touchend") {
+    } else if (event.type === "mouseup") {
         isMouseDown = false;
         mouseX = event.offsetX;
         mouseY = event.offsetY;
         currentStroke.points.push(Point(mouseX, mouseY, 'end'));
-        
-        
+   
         // Send stroke
         socket.emit('stroke', currentStroke);
         
-    } else if (event.type === "mousemove" || event.type === "touchmove"){
+    } else if (event.type === "mousemove"){
         if (isMouseDown) {
             mouseX = event.offsetX;
             mouseY = event.offsetY;
@@ -98,11 +104,8 @@ function handleEvent(event) {
  * Canvas Listeners
  */
 canvas.addEventListener("mousedown", handleEvent);
-window.addEventListener("mouseup", handleEvent);
+canvas.addEventListener("mouseup", handleEvent);
 canvas.addEventListener("mousemove", handleEvent);
-canvas.addEventListener("touchstart", handleEvent);
-canvas.addEventListener("touchend", handleEvent);
-canvas.addEventListener("touchmove", handleEvent);
 
 var clearBtn = document.getElementById("clearButton");
 clearBtn.addEventListener("click", function(evt){
@@ -111,3 +114,27 @@ clearBtn.addEventListener("click", function(evt){
 });
 
 
+/*
+ * Palette functons
+ */
+var palette = document.getElementById("palette");
+var swatches = palette.children;
+var currentSwatch; // we'll keep track of what swatch is active in this.
+
+for (var i = 0; i < swatches.length; i++) {
+    var swatch = swatches[i];
+    if (i == 0) {
+        currentSwatch = swatch;
+    }
+
+    // when we click on a swatch...
+    swatch.addEventListener("click",function (evt) {
+       
+        this.className = "active"; // give the swatch a class of "active", which will trigger the CSS border.
+        currentSwatch.className = ""; // remove the "active" class from the previously selected swatch
+        currentSwatch = this; // set this to the current swatch so next time we'll take "active" off of this.
+
+        
+        context.strokeStyle = this.style.backgroundColor; // set the background color for the canvas.
+    });
+}

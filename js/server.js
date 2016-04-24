@@ -30,7 +30,7 @@ io.on('connection', function(socket){
   
   socket.on('stroke', function(stroke){
     console.log('Someone had a stroke!\n'+JSON.stringify(stroke));
-    io.emit('stroke', stroke);
+    socket.broadcast.emit('stroke', stroke);
   })
 });
 
