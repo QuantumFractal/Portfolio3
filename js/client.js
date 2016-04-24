@@ -5,48 +5,81 @@ var mouseX = 0;
 var mouseY = 0;
 
 context.strokeStyle = "#000000";
-canvas.width = canvas.width; 
-context.fillStyle = "#ffffff";
-context.fillRect(0,0,canvas.width,canvas.height);
+clearBoard();
 
 var socket = io();
+currentStroke = {};
+
+/*
+ * Generator functions
+ */
+function Point(x, y){
+    return {'x':x,'y':y};
+}
+
+/*
+ * Socket Listeners
+ */
+socket.on('stroke', drawStroke);
+
+socket.on('clear', clearBoard);
 
 
-
-// when the user presses their mouse down on the canvas.
-canvas.addEventListener("mousedown",function (evt) {
-    isMouseDown = true;
-
-    mouseX = evt.offsetX;
-    mouseY = evt.offsetY;
-
-    context.beginPath();
-    context.moveTo(mouseX, mouseY);
-});
-
-// when the user lifts their mouse up anywhere on the screen.
-window.addEventListener("mouseup",function (evt) {
-    isMouseDown = false;
-});
-
-// as the user moves the mouse around.
-canvas.addEventListener("mousemove",function (evt) {
-    if (isMouseDown) {
-        mouseX = evt.offsetX;
-        mouseY = evt.offsetY;
-
-        context.lineTo(mouseX, mouseY);
-        context.stroke();
-    }
-});
-
-var clearBtn = document.getElementById("clearButton");
-clearBtn.addEventListener("click",function(evt) {
-    canvas.width = canvas.width; // this is all it takes to clear!
- 
-    // make sure the canvas' background is actually white for saving.
+/*
+ * Canvas functions
+ */
+function clearBoard() {
+    canvas.width = canvas.width; 
     context.fillStyle = "#ffffff";
     context.fillRect(0,0,canvas.width,canvas.height);
+}
+
+function drawStroke(stroke) {
+    
+}
+
+function handleEvent(event) {
+    if(event.type === "mousedown"){
+        isMouseDown = true;
+        mouseX = event.offsetX;
+        mouseY = event.offsetY;
+        context.beginPath();
+        context.moveTo(mouseX, mouseY);
+        
+        // Save starting point
+        currentStroke = {'points':[Point(mouseX, mouseY)]};   
+        
+    } else if (event.type === "mouseup"){
+        isMouseDown = false;
+        
+        // Send stroke
+        socket.emit('stroke', currentStroke);
+        
+    } else if (event.type === "mousemove"){
+        if (isMouseDown) {
+            mouseX = event.offsetX;
+            mouseY = event.offsetY;
+
+            context.lineTo(mouseX, mouseY);
+            context.stroke();
+            
+            // Save intermediate points
+            currentStroke.points.push(Point(mouseX, mouseY));
+        } 
+    }
+}
+
+/*
+ * Canvas Listeners
+ */
+canvas.addEventListener("mousedown", handleEvent);
+window.addEventListener("mouseup", handleEvent);
+canvas.addEventListener("mousemove", handleEvent);
+
+var clearBtn = document.getElementById("clearButton");
+clearBtn.addEventListener("click", function(evt){
+    socket.emit('clear', '');
+    clearBoard();
 });
 
 
