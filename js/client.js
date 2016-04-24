@@ -60,7 +60,7 @@ function drawPoint(point) {
 }
 
 function handleEvent(event) {
-    if(event.type === "mousedown"){
+    if(event.type === "mousedown" || event.type === "touchstart"){
         isMouseDown = true;
         mouseX = event.offsetX;
         mouseY = event.offsetY;
@@ -70,7 +70,7 @@ function handleEvent(event) {
         // Save starting point
         currentStroke = {'points':[Point(mouseX, mouseY, 'start')]};   
         
-    } else if (event.type === "mouseup"){
+    } else if (event.type === "mouseup" || event.type === "touchend") {
         isMouseDown = false;
         mouseX = event.offsetX;
         mouseY = event.offsetY;
@@ -80,7 +80,7 @@ function handleEvent(event) {
         // Send stroke
         socket.emit('stroke', currentStroke);
         
-    } else if (event.type === "mousemove"){
+    } else if (event.type === "mousemove" || event.type === "touchmove"){
         if (isMouseDown) {
             mouseX = event.offsetX;
             mouseY = event.offsetY;
@@ -100,6 +100,9 @@ function handleEvent(event) {
 canvas.addEventListener("mousedown", handleEvent);
 window.addEventListener("mouseup", handleEvent);
 canvas.addEventListener("mousemove", handleEvent);
+canvas.addEventListener("touchstart", handleEvent);
+canvas.addEventListener("touchend", handleEvent);
+canvas.addEventListener("touchmove", handleEvent);
 
 var clearBtn = document.getElementById("clearButton");
 clearBtn.addEventListener("click", function(evt){
