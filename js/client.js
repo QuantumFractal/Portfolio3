@@ -4,7 +4,10 @@ var isMouseDown = false;
 var mouseX = 0;
 var mouseY = 0;
 
-context.strokeStyle = "#000000"; // drawing black lines.
+context.strokeStyle = "#000000";
+canvas.width = canvas.width; 
+ context.fillStyle = "#ffffff";
+ context.fillRect(0,0,canvas.width,canvas.height);
 
 // when the user presses their mouse down on the canvas.
 canvas.addEventListener("mousedown",function (evt) {
@@ -33,7 +36,7 @@ canvas.addEventListener("mousemove",function (evt) {
     }
 });
 
-var clearBtn = document.getElementById("clear");
+var clearBtn = document.getElementById("clearButton");
 clearBtn.addEventListener("click",function(evt) {
     canvas.width = canvas.width; // this is all it takes to clear!
  
@@ -41,3 +44,5 @@ clearBtn.addEventListener("click",function(evt) {
     context.fillStyle = "#ffffff";
     context.fillRect(0,0,canvas.width,canvas.height);
 });
+
+
