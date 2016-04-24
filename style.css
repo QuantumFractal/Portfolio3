@@ -1,0 +1,42 @@
+#center {
+    width: 80%;
+    margin: 0 auto; 
+}
+
+a, h1, h2, h3 {
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+h2 {
+    text-align: center;
+    vertical-align: center;
+}
+
+
+body {
+    background-color : #c6e2ff;
+}
+
+button {
+    font-family: Verdana, Geneva, sans-serif;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+canvas {
+    border:3px solid black;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+div {
+    border-radius: 25px;
+    border: 2px solid #8a9eb2;
+    background-color : #eeeeee;    
+}
