@@ -9,11 +9,27 @@
 
 <body>
     <div id="center" class="bottomBox">
-        <h2>Drawing</h2>
+        <h2>Whiteboard!</h2>
         <hr>
-        
-        <button id="undoButton" class="btn"> Undo </button><button id="clearButton" class="btn"> Clear </button>
-        <div class="wrapper">
+
+        <table align="center">
+            <tr>
+                <td><button id="undoButton" class="btn"> Undo </button></td>
+                <td><button id="clearButton" class="btn"> Clear </button></td> 
+            </tr>
+        </table>
+        <div class="wrapper">  
+            <ul id="size">
+                <li class="active" style="background:#ffffff">1</li>
+                <li style="background:#ffffff">2</li>
+                <li style="background:#ffffff">4</li>
+                <li style="background:#ffffff">8</li>
+                <li style="background:#ffffff">16</li>
+                <li style="background:#ffffff">20</li>
+                <li style="background:#ffffff">24</li>
+            </ul>
+        </div>
+        <div class="wrapper">  
             <ul id="palette">
                 <li class="active" style="background:#000000"></li>
                 <li style="background:#ff0000"></li>
@@ -25,7 +41,7 @@
             </ul>
         </div>
         <hr>
-        <canvas id="drawingPad" width="600px" height="400px"></canvas>
+        <canvas id="drawingPad" width="500px" height="500px"></canvas>
         <br>
     </div>
     

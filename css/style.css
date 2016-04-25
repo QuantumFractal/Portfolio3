@@ -3,7 +3,7 @@
     margin: 0 auto; 
 }
 
-a, h1, h2, h3 {
+a, h1, h2, h3, li {
     font-family: Verdana, Geneva, sans-serif;
 }
 
@@ -47,7 +47,6 @@ button {
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
-	font-family:Arial;
 	font-size:13px;
 	padding:6px 24px;
     margin-top: 5px;
