@@ -5,11 +5,13 @@ var mouseX = 0;
 var mouseY = 0;
 
 context.strokeStyle = "#000000";
+context.lineCap="round";
+context.jointCap="round";
 clearBoard();
 
 var socket = io();
 currentStroke = {};
-
+penSize = 1;
 board_history = [];
 
 /*
@@ -19,8 +21,8 @@ function Point(x, y, type) {
     return {'x':x,'y':y, 'type':type};
 }
 
-function Stroke(color) {
-    return {'color':color, 'visibility': true, 'points':[]};
+function Stroke(color, size) {
+    return {'color':color, 'size':size, 'visibility': true, 'points':[]};
 }
 
 /*
@@ -80,15 +82,21 @@ function drawStroke(stroke) {
     while(isMouseDown);
 
     context.strokeStyle = stroke.color.toString();
+    var old = penSize;
+    penSize = stroke.size;
     for (i=0; i<stroke.points.length; i++){
         drawPoint(stroke.points[i]);
     } 
+    penSize = old;
     context.strokeStyle = currentSwatch.style.backgroundColor;
 }
 
 function drawPoint(point) {
     if (point.type === "start"){
         context.beginPath();
+        context.lineWidth = penSize;
+        context.lineCap="round";
+        context.jointCap="round";
         context.moveTo(point.x, point.y);
     } else if (point.type === "drag"){
         context.lineTo(point.x, point.y);
@@ -104,10 +112,13 @@ function handleEvent(event) {
         mouseX = event.offsetX;
         mouseY = event.offsetY;
         context.beginPath();
+        context.lineWidth = penSize;
+        context.lineCap="round";
+        context.jointCap="round";
         context.moveTo(mouseX, mouseY);
         
         // Save starting point
-        currentStroke = Stroke(currentSwatch.style.backgroundColor);
+        currentStroke = Stroke(currentSwatch.style.backgroundColor, penSize);
         currentStroke.points.push(Point(mouseX, mouseY, 'start'));  
         
     } else if (event.type === "mouseup") {
@@ -180,5 +191,28 @@ for (var i = 0; i < swatches.length; i++) {
 
         
         context.strokeStyle = this.style.backgroundColor; // set the background color for the canvas.
+    });
+}
+
+/*
+ * Size functions
+ */
+var size = document.getElementById("size");
+var sizes = size.children;
+var currentSize
+
+for (var i = 0; i < sizes.length; i++) {
+    var size = sizes[i];
+    if (i == 0) {
+        currentSize = size;
+    }
+
+    size.addEventListener("click",function (evt) {
+      
+        this.className = "active"; 
+        currentSize.className = ""; 
+        currentSize = this; 
+        
+        penSize = Number(this.innerHTML); // set the background color for the canvas.
     });
 }
