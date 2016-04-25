@@ -107,7 +107,7 @@ function drawPoint(point) {
 }
 
 function handleEvent(event) {
-    if(event.type === "mousedown"){
+    if(event.type === "mousedown" || event.type === "touchstart"){
         isMouseDown = true;
         mouseX = event.offsetX;
         mouseY = event.offsetY;
@@ -121,7 +121,7 @@ function handleEvent(event) {
         currentStroke = Stroke(currentSwatch.style.backgroundColor, penSize);
         currentStroke.points.push(Point(mouseX, mouseY, 'start'));  
         
-    } else if (event.type === "mouseup") {
+    } else if (event.type === "mouseup" || event.type === "touchend") {
         isMouseDown = false;
         mouseX = event.offsetX;
         mouseY = event.offsetY;
@@ -133,7 +133,7 @@ function handleEvent(event) {
         // Save history
         board_history.push(currentStroke);
         
-    } else if (event.type === "mousemove"){
+    } else if (event.type === "mousemove" || event.type === "touchmove"){
         if (isMouseDown) {
             mouseX = event.offsetX;
             mouseY = event.offsetY;
@@ -153,6 +153,9 @@ function handleEvent(event) {
 canvas.addEventListener("mousedown", handleEvent);
 canvas.addEventListener("mouseup", handleEvent);
 canvas.addEventListener("mousemove", handleEvent);
+canvas.addEventListener("touchstart", handleEvent);
+canvas.addEventListener("touchmove", handleEvent);
+canvas.addEventListener("touchend", handleEvent);
 
 var clearBtn = document.getElementById("clearButton");
 clearBtn.addEventListener("click", function(evt){
