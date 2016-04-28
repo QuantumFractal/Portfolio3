@@ -153,9 +153,12 @@ function handleEvent(event) {
 canvas.addEventListener("mousedown", handleEvent);
 canvas.addEventListener("mouseup", handleEvent);
 canvas.addEventListener("mousemove", handleEvent);
+
+/*
 canvas.addEventListener("touchstart", handleEvent);
 canvas.addEventListener("touchmove", handleEvent);
 canvas.addEventListener("touchend", handleEvent);
+*/
 
 var clearBtn = document.getElementById("clearButton");
 clearBtn.addEventListener("click", function(evt){
