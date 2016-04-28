@@ -22,9 +22,7 @@ app.use('/js', express.static(path.join(__dirname, '..', 'js')));
 app.use('/css', express.static(path.join(__dirname, '..', 'css')));
 
 app.get('/', function(req, res) {
-  res.render('homepage', {
-    'roomID': 'dangus'
-  });
+  res.render('homepage');
 });
 
 app.get('/tester', function(req, res){

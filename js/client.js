@@ -137,7 +137,7 @@ function handleEvent(event) {
         if (isMouseDown) {
             mouseX = event.offsetX;
             mouseY = event.offsetY;
-
+            
             context.lineTo(mouseX, mouseY);
             context.stroke();
             
