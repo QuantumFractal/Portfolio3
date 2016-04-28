@@ -219,3 +219,11 @@ for (var i = 0; i < sizes.length; i++) {
         penSize = Number(this.innerHTML); // set the background color for the canvas.
     });
 }
+
+var clipboard = new Clipboard('.clip');
+clipboard.on('success', function(e) {
+    alert("Copied Room ID to Clipboard!")
+});
+clipboard.on('error', function(e) {
+    console.log(e);
+});

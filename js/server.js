@@ -2,20 +2,35 @@
  *   Server file which handles all drawing requests and such
  *
  */
-
 var express = require('express');
+var path = require("path");
 var app = express();
+
+var swig  = require('swig');
+app.engine('html', swig.renderFile);
+app.set('view engine', 'html');
+app.set('views', path.join(__dirname, '..', 'views'));
+app.set('view cache', false);
+
+
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var path = require("path");
 
 board_history = [];
 
 app.use('/js', express.static(path.join(__dirname, '..', 'js')));
 app.use('/css', express.static(path.join(__dirname, '..', 'css')));
 
-app.get('/', function(req, res){
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+app.get('/', function(req, res) {
+  res.render('homepage', {
+    'roomID': 'dangus'
+  });
+});
+
+app.get('/tester', function(req, res){
+  res.render('whiteboard', {
+    'roomID': 'dangus'
+  });
 });
 
 io.on('connection', function(socket){
