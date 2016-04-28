@@ -9,6 +9,7 @@ context.lineCap="round";
 context.jointCap="round";
 clearBoard();
 
+var roomID = document.getElementById("roomID").value;
 var socket = io();
 currentStroke = {};
 penSize = 1;
@@ -39,6 +40,10 @@ socket.on('undo', function() {
     undocount++;
     console.log('# of undos: '+undocount);
     undoLast();
+});
+
+socket.on('connect', function() {
+   socket.emit('joinRoom', roomID);
 });
 
 socket.on('clear', clearBoard);

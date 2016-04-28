@@ -12,12 +12,12 @@
         <hr>
 
         <div class="wrapper">
-            <p> Join an existing room, or create a new room below </p>
+            <p> Join an existing room, or create a new room below.</p>
         </div>
         <table align="center">
             <tr>
                 <td>
-                    <input type="text" placeholder="RoomID" name="joinRoom">
+                    <input id="joinInput" type="text" placeholder="RoomID" name="joinRoom">
                 </td>
                 <td>
                     <button id="joinRoomButton" class="btn" style=" padding:6px 24px"> Join Room </button>
@@ -25,17 +25,19 @@
             </tr>
             <tr>
                 <td>
-                    <input type="text" placeholder="New Room Name" name="newRoom">
+                    <input id="newInput" type="text" placeholder="New Room Name" name="newRoom">
                 </td>
                 <td>
-                    <button id="newRoomButton" class="btn" style=" padding:6px 24px"> Create Room </button>
+                    <button id="newRoomButton" class="btn" style=" padding:6px 24px"> Make Room </button>
                 </td> 
             </tr>
         </table>
+        <br>
 
     </div>
     
     <!-- Load scripts after page loads -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.3.2.js"></script>
+    <script src="../js/router.js"></script>
 </body>
