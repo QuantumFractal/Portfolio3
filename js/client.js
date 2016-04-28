@@ -164,7 +164,7 @@ canvas.addEventListener("touchend", handleEvent);
 
 var clearBtn = document.getElementById("clearButton");
 clearBtn.addEventListener("click", function(evt){
-    socket.emit('clear', '');
+    socket.emit('clear', '', roomID);
     clearBoard();
     board_history = [];
 });

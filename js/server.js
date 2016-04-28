@@ -38,6 +38,8 @@ app.get('/tester', function(req, res){
 });
 
 io.on('connection', function(socket){
+    var roomID;
+    
     console.log('a user connected!');
 
     // Room Functions
@@ -59,30 +61,29 @@ io.on('connection', function(socket){
 
     socket.on('joinRoom', function(room) {
         console.log("Someone Joined room "+JSON.stringify(room));
+        roomID = room;
         socket.join(room);
     });
-
 
     socket.on('disconnect', function() {
         console.log('user disconnected');
     });
 
     // Drawing Functions
-    socket.on('clear', function(msg) {
-        console.log('someone cleared the canvas');
-        board_history = [];
-        io.emit('clear', msg);
+    socket.on('clear', function() {
+        console.log('someone cleared the canvas in room '+roomID);
+        socket.broadcast.to(roomID).emit('clear');
     });
 
     socket.on('stroke', function(stroke) {
         console.log('Someone had a stroke!\n');
         board_history.push(stroke);
-        socket.broadcast.emit('stroke', stroke);
+        socket.broadcast.to(roomID).emit('stroke', stroke);
     });
 
     socket.on('undo', function() {
         console.log('Somone undid something!');
-        socket.broadcast.emit('undo');
+        socket.broadcast.to(roomID).emit('undo');
     });
 });
 
