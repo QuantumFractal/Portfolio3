@@ -35,15 +35,22 @@ socket.on('stroke', function(stroke) {
     board_history.push(stroke);
 });
 
-undocount = 0;
 socket.on('undo', function() {
-    undocount++;
-    console.log('# of undos: '+undocount);
     undoLast();
 });
 
 socket.on('connect', function() {
    socket.emit('joinRoom', roomID);
+});
+
+socket.on('disconnect', function() {
+    alert("Server was disconnected!\nRedirecting");
+    window.location = "/";
+});
+
+socket.on('getHistory', function(history) {
+   board_history = history;
+   redraw();
 });
 
 socket.on('clear', clearBoard);
@@ -65,7 +72,7 @@ function redraw(){
 }
 
 function undoLast() {
-    if(board_history.length > 0) {
+    if(board_history.length != 0) {
         board_history.pop();
         redraw();
         return true;
@@ -172,9 +179,7 @@ clearBtn.addEventListener("click", function(evt){
 var undoBtn = document.getElementById("undoButton");
 undoBtn.addEventListener("click", function(evt){
     last = undoLast();
-    if (last == true) {
-        socket.emit('undo');
-    }
+    socket.emit('undo');
 });
 
 /*
@@ -221,8 +226,8 @@ for (var i = 0; i < sizes.length; i++) {
         currentSize.className = ""; 
         currentSize = this; 
         
-        penSize = Number(this.innerHTML); // set the background color for the canvas.
-    });
+        penSize = Number(this.innerHTML);
+   });
 }
 
 var clipboard = new Clipboard('.clip');
