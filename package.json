@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
   "name": "modules",
   "version": "0.0.1",
@@ -24,3 +25,24 @@
     "swig": "^1.4.2"
   }
 }
+=======
+{
+  "name": "modules",
+  "version": "0.0.1",
+  "description": "Portfolio3 Package",
+  "main": "js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QuantumFractal/Portfolio3.git"
+  },
+  "author": "Tom and Michael",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/QuantumFractal/Portfolio3/issues"
+  },
+  "homepage": "https://github.com/QuantumFractal/Portfolio3#readme"
+}
+>>>>>>> Stashed changes
