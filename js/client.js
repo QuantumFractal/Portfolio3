@@ -18,8 +18,8 @@ board_history = [];
 /*
  * Generator functions
  */
-function Point(x, y, type) {
-    return {'x':x,'y':y, 'type':type};
+function Point(x, y, type, radius) {
+    return {'x':x,'y':y, 'type':type, 'radius':radius};
 }
 
 function Stroke(color, size) {
@@ -60,13 +60,13 @@ socket.on('clear', clearBoard);
  */
 function redraw(){
     clearBoard();
-    
+
     for(i=0; i<board_history.length; i++){
         stroke = board_history[i];
         context.strokeStyle = stroke.color.toString();
         for (j=0; j<stroke.points.length; j++){
             drawPoint(stroke.points[j]);
-        } 
+        }
         context.strokeStyle = currentSwatch.style.backgroundColor;
     }
 }
@@ -81,7 +81,7 @@ function undoLast() {
 }
 
 function clearBoard() {
-    canvas.width = canvas.width; 
+    canvas.width = canvas.width;
     context.fillStyle = "#ffffff";
     context.fillRect(0,0,canvas.width,canvas.height);
     if (currentSwatch != undefined) {
@@ -89,7 +89,7 @@ function clearBoard() {
     }
 }
 function drawStroke(stroke) {
-    
+
     // Terrible solution
     while(isMouseDown);
 
@@ -98,7 +98,7 @@ function drawStroke(stroke) {
     penSize = stroke.size;
     for (i=0; i<stroke.points.length; i++){
         drawPoint(stroke.points[i]);
-    } 
+    }
     penSize = old;
     context.strokeStyle = currentSwatch.style.backgroundColor;
 }
@@ -106,7 +106,7 @@ function drawStroke(stroke) {
 function drawPoint(point) {
     if (point.type === "start"){
         context.beginPath();
-        context.lineWidth = penSize;
+        context.lineWidth = point.radius;
         context.lineCap="round";
         context.jointCap="round";
         context.moveTo(point.x, point.y);
@@ -128,34 +128,34 @@ function handleEvent(event) {
         context.lineCap="round";
         context.jointCap="round";
         context.moveTo(mouseX, mouseY);
-        
+
         // Save starting point
         currentStroke = Stroke(currentSwatch.style.backgroundColor, penSize);
-        currentStroke.points.push(Point(mouseX, mouseY, 'start'));  
-        
+        currentStroke.points.push(Point(mouseX, mouseY, 'start', penSize));
+
     } else if (event.type === "mouseup" || event.type === "touchend") {
         isMouseDown = false;
         mouseX = event.offsetX;
         mouseY = event.offsetY;
-        currentStroke.points.push(Point(mouseX, mouseY, 'end'));
-   
+        currentStroke.points.push(Point(mouseX, mouseY, 'end', penSize));
+
         // Send stroke
         socket.emit('stroke', currentStroke);
-        
+
         // Save history
         board_history.push(currentStroke);
-        
+
     } else if (event.type === "mousemove" || event.type === "touchmove"){
         if (isMouseDown) {
             mouseX = event.offsetX;
             mouseY = event.offsetY;
-            
+
             context.lineTo(mouseX, mouseY);
             context.stroke();
-            
+
             // Save intermediate points
-            currentStroke.points.push(Point(mouseX, mouseY, 'drag'));
-        } 
+            currentStroke.points.push(Point(mouseX, mouseY, 'drag', penSize));
+        }
     }
 }
 
@@ -197,12 +197,12 @@ for (var i = 0; i < swatches.length; i++) {
 
     // when we click on a swatch...
     swatch.addEventListener("click",function (evt) {
-       
+
         this.className = "active"; // give the swatch a class of "active", which will trigger the CSS border.
         currentSwatch.className = ""; // remove the "active" class from the previously selected swatch
         currentSwatch = this; // set this to the current swatch so next time we'll take "active" off of this.
 
-        
+
         context.strokeStyle = this.style.backgroundColor; // set the background color for the canvas.
     });
 }
@@ -221,11 +221,11 @@ for (var i = 0; i < sizes.length; i++) {
     }
 
     size.addEventListener("click",function (evt) {
-      
-        this.className = "active"; 
-        currentSize.className = ""; 
-        currentSize = this; 
-        
+
+        this.className = "active";
+        currentSize.className = "";
+        currentSize = this;
+
         penSize = Number(this.innerHTML);
    });
 }
